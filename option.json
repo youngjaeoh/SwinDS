@@ -17,8 +17,8 @@
     "train": {
       "name": "train_dataset"           // just name
       , "dataset_type": "sr"         // "dncnn" | "dnpatch" | "fdncnn" | "ffdnet" | "sr" | "srmd" | "dpsr" | "plain" | "plainpatch" | "jpeg"
-      , "dataroot_H": "/nas/dataset/DIV2K/DIV2K_train_HR"// path of H training dataset. DIV2K (800 training images)
-      , "dataroot_L": "/nas/dataset/DIV2K/DIV2K_train_LR_bicubic/X2"              // path of L training dataset
+      , "dataroot_H": "~/nas/dataset/DIV2K/DIV2K_train_HR"// path of H training dataset. DIV2K (800 training images)
+      , "dataroot_L": "~/nas/dataset/DIV2K/DIV2K_train_LR_bicubic/X2"              // path of L training dataset
 
       , "H_size": 96                   // 96/144|192/384 | 128/192/256/512. LR patch size is set to 48 or 64 when compared with RCAN or RRDB.
 
@@ -29,8 +29,8 @@
     , "test": {
       "name": "test_dataset"            // just name
       , "dataset_type": "sr"         // "dncnn" | "dnpatch" | "fdncnn" | "ffdnet" | "sr" | "srmd" | "dpsr" | "plain" | "plainpatch" | "jpeg"
-      , "dataroot_H": "/nas/dataset/Set5/original"  // path of H testing dataset
-      , "dataroot_L": "testsets/Set5/LR_bicubic/X2"              // path of L testing dataset
+      , "dataroot_H": "~/nas/dataset/Set5/original"  // path of H testing dataset
+      , "dataroot_L": "~/nas/dataset/Set5/LRbicx2"              // path of L testing dataset
 
     }
   }
