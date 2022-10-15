@@ -7,6 +7,7 @@ import logging
 from torch.utils.data import DataLoader
 from torch.utils.data.distributed import DistributedSampler
 import torch
+import wandb
 
 from utils import utils_logger
 from utils import util
@@ -17,6 +18,7 @@ from data.select_dataset import define_Dataset
 from models.select_model import define_Model
 
 def main(json_path='option.json'):
+    wandb.init(project="SwinDS")
 
     '''
     # ----------------------------------------
@@ -231,6 +233,9 @@ def main(json_path='option.json'):
 
                 # testing log
                 logger.info('<epoch:{:3d}, iter:{:8,d}, Average PSNR : {:<.2f}dB\n'.format(epoch, current_step, avg_psnr))
+
+                ########### wandb loss
+                wandb.log({"PSNR": avg_psnr})
 
 if __name__ == '__main__':
     main()

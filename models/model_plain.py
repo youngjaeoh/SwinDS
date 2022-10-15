@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 from torch.optim import lr_scheduler
 from torch.optim import Adam
+import wandb
 
 from models.select_network import define_G
 from models.model_base import ModelBase
@@ -172,6 +173,9 @@ class ModelPlain(ModelBase):
 
         # self.log_dict['G_loss'] = G_loss.item()/self.E.size()[0]  # if `reduction='sum'`
         self.log_dict['G_loss'] = G_loss.item()
+
+        ########### wandb loss
+        wandb.log({"loss": G_loss.item()})
 
         if self.opt_train['E_decay'] > 0:
             self.update_E(self.opt_train['E_decay'])
