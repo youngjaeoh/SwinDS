@@ -29,7 +29,7 @@
     , "test": {
       "name": "test_dataset"            // just name
       , "dataset_type": "sr"         // "dncnn" | "dnpatch" | "fdncnn" | "ffdnet" | "sr" | "srmd" | "dpsr" | "plain" | "plainpatch" | "jpeg"
-      , "dataroot_H": "~/nas/dataset/Set5/original"  // path of H testing dataset
+      , "dataroot_H": "~/nas/dataset/Set5/GTmod12"  // path of H testing dataset
       , "dataroot_L": "~/nas/dataset/Set5/LRbicx2"              // path of L testing dataset
 
     }
