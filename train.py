@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader
 from torch.utils.data.distributed import DistributedSampler
 import torch
 import wandb
+from tqdm import tqdm
 
 from utils import utils_logger
 from utils import util
@@ -160,7 +161,7 @@ def main(json_path='option.json'):
         if opt['dist']:
             train_sampler.set_epoch(epoch)
 
-        for i, train_data in enumerate(train_loader):
+        for i, train_data in enumerate(tqdm(train_loader)):
 
             current_step += 1
 
