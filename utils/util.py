@@ -52,7 +52,7 @@ def surf(Z, cmap='rainbow', figsize=None):
 # --------------------------------------------
 '''
 
-
+######################## 사용 ########################
 def get_image_paths(dataroot):
     paths = None  # return None if dataroot is None
     if isinstance(dataroot, str):
@@ -175,6 +175,7 @@ def mkdir_and_rename(path):
 # --------------------------------------------
 # get uint8 image of size HxWxn_channles (RGB)
 # --------------------------------------------
+######################## 사용 ########################
 def imread_uint(path, n_channels=3):
     #  input: path
     # output: HxWx3(RGB or GGG), or HxWx1 (G)
@@ -238,7 +239,7 @@ def read_img(path):
 # numpy(single) [0, 1] <--->  numpy(uint)
 # --------------------------------------------
 
-
+######################## 사용 ########################
 def uint2single(img):
     return np.float32(img / 255.)
 
@@ -286,7 +287,7 @@ def tensor2uint(img):
 # numpy(single) (HxWxC) <--->  tensor
 # --------------------------------------------
 
-
+######################## 사용 ########################
 # convert single (HxWxC) to 3-dimensional torch tensor
 def single2tensor3(img):
     return torch.from_numpy(np.ascontiguousarray(img)).permute(2, 0, 1).float()
@@ -366,7 +367,7 @@ def tensor2img(tensor, out_type=np.uint8, min_max=(0, 1)):
 # --------------------------------------------
 '''
 
-
+######################## 사용 ########################
 def augment_img(img, mode=0):
     '''Kai Zhang (github: https://github.com/cszn)
     '''
@@ -480,7 +481,7 @@ def augment_imgs(img_list, hflip=True, rot=True):
 # --------------------------------------------
 '''
 
-
+######################## 사용 ########################
 def modcrop(img_in, scale):
     # img_in: Numpy, HWC or HW
     img = np.copy(img_in)
@@ -515,7 +516,7 @@ def shave(img_in, border=0):
 # --------------------------------------------
 '''
 
-
+######################## 사용 ########################
 def rgb2ycbcr(img, only_y=True):
     '''same as matlab rgb2ycbcr
     only_y: only return Y channel
@@ -909,6 +910,7 @@ def imresize(img, scale, antialiasing=True):
 # --------------------------------------------
 # imresize for numpy image [0, 1]
 # --------------------------------------------
+######################## 사용 ########################
 def imresize_np(img, scale, antialiasing=True):
     # Now the scale should be the same for H and W
     # input: img: Numpy, HWC or HW [0,1]
@@ -984,13 +986,3 @@ def imresize_np(img, scale, antialiasing=True):
 
 if __name__ == '__main__':
     img = imread_uint('test.bmp', 3)
-#    img = uint2single(img)
-#    img_bicubic = imresize_np(img, 1/4)
-#    imshow(single2uint(img_bicubic))
-#
-#    img_tensor = single2tensor4(img)
-#    for i in range(8):
-#        imshow(np.concatenate((augment_img(img, i), tensor2single(augment_img_tensor4(img_tensor, i))), 1))
-
-#    patches = patches_from_image(img, p_size=128, p_overlap=0, p_max=200)
-#    imssave(patches,'a.png')

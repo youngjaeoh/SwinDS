@@ -15,8 +15,9 @@ from utils import option
 from utils.dist import init_dist, get_dist_info
 from utils.util import rgb2ycbcr
 
-from data.select_dataset import define_Dataset
-from models.select_model import define_Model
+from dataset import DatasetSR
+from engine import engine
+
 
 def main(json_path='option.json'):
     wandb.init(project="SwinDS")
@@ -29,9 +30,10 @@ def main(json_path='option.json'):
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--opt', type=str, default=json_path, help='Path to option JSON file.')
-    parser.add_argument('--launcher', default='pytorch', help='job launcher') # 얘 뭐하는지 모르겠음
-    parser.add_argument('--local_rank', type=int, default=0) # 얘 뭐하는지 모르겠음
+    parser.add_argument('--launcher', default='pytorch', help='job launcher')
+    parser.add_argument('--local_rank', type=int, default=0)
     parser.add_argument('--dist', default=False)
+
 
     opt = option.parse(parser.parse_args().opt, is_train=True)
     opt['dist'] = parser.parse_args().dist
@@ -50,6 +52,7 @@ def main(json_path='option.json'):
     # update opt
     # ----------------------------------------
     # -->-->-->-->-->-->-->-->-->-->-->-->-->-
+
     init_iter_G, init_path_G = option.find_last_checkpoint(opt['path']['models'], net_type='G')
     init_iter_E, init_path_E = option.find_last_checkpoint(opt['path']['models'], net_type='E')
     opt['path']['pretrained_netG'] = init_path_G
@@ -105,7 +108,7 @@ def main(json_path='option.json'):
     # ----------------------------------------
     for phase, dataset_opt in opt['datasets'].items():
         if phase == 'train':
-            train_set = define_Dataset(dataset_opt)
+            train_set = DatasetSR(dataset_opt)
             train_size = int(math.ceil(len(train_set) / dataset_opt['dataloader_batch_size']))
             if opt['rank'] == 0:
                 logger.info('Number of train images: {:,d}, iters: {:,d}'.format(len(train_set), train_size))
@@ -127,7 +130,7 @@ def main(json_path='option.json'):
                                           pin_memory=True)
 
         elif phase == 'test':
-            test_set = define_Dataset(dataset_opt)
+            test_set = DatasetSR(dataset_opt)
             test_loader = DataLoader(test_set, batch_size=1,
                                      shuffle=False, num_workers=1,
                                      drop_last=False, pin_memory=True)
@@ -140,11 +143,12 @@ def main(json_path='option.json'):
     # ----------------------------------------
     '''
 
-    model = define_Model(opt)
+    # model = define_Model(opt)
+    model = engine(opt)
     model.init_train()
-    if opt['rank'] == 0:
-        logger.info(model.info_network())
-        logger.info(model.info_params())
+    # if opt['rank'] == 0:
+    #     logger.info(model.info_network())
+    #     logger.info(model.info_params())
 
     '''
     # ----------------------------------------
@@ -224,13 +228,9 @@ def main(json_path='option.json'):
                     # -----------------------
                     # calculate PSNR
                     # -----------------------
-                    print(E_img.shape)
-                    print(H_img.shape)
-
                     ########## Calculate PSNR using Y channel ##########
                     E_img = rgb2ycbcr(E_img)
                     H_img = rgb2ycbcr(H_img)
-                    ########## Calculate PSNR using Y channel ##########
 
                     current_psnr = util.calculate_psnr(E_img, H_img, border=border)
 

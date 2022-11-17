@@ -3,7 +3,6 @@ import numpy as np
 import torch.utils.data as data
 from utils import util
 
-
 class DatasetSR(data.Dataset):
     '''
     # -----------------------------------------
