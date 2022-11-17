@@ -8,7 +8,7 @@
   , "n_channels": 3  // broadcast to "datasets", 1 for grayscale, 3 for color
 
   , "path": {
-    "root": "superresolution"            // "denoising" | "superresolution" | "dejpeg"
+    "root": "superresolution_y_pooling_xres"            // "denoising" | "superresolution" | "dejpeg"
     , "pretrained_netG": null      // path of pretrained models. We fine-tune X3/X4/X8 models from X2 models, so that `G_optimizer_lr` and `G_scheduler_milestones` can be halved to save time.
     , "pretrained_netE": null      // path of pretrained models
   }
@@ -17,8 +17,8 @@
     "train": {
       "name": "train_dataset"           // just name
       , "dataset_type": "sr"         // "dncnn" | "dnpatch" | "fdncnn" | "ffdnet" | "sr" | "srmd" | "dpsr" | "plain" | "plainpatch" | "jpeg"
-      , "dataroot_H": "~/nas/dataset/DIV2K/DIV2K_train_HR"// path of H training dataset. DIV2K (800 training images)
-      , "dataroot_L": "~/nas/dataset/DIV2K/DIV2K_train_LR_bicubic/X2"              // path of L training dataset
+      , "dataroot_H": "~/workspace/data/DIV2K/DIV2K_train_HR"// path of H training dataset. DIV2K (800 training images)
+      , "dataroot_L": "~/workspace/data/DIV2K/DIV2K_train_LR_bicubic/X2"              // path of L training dataset
 
       , "H_size": 96                   // 96/144|192/384 | 128/192/256/512. LR patch size is set to 48 or 64 when compared with RCAN or RRDB.
 
@@ -29,8 +29,8 @@
     , "test": {
       "name": "test_dataset"            // just name
       , "dataset_type": "sr"         // "dncnn" | "dnpatch" | "fdncnn" | "ffdnet" | "sr" | "srmd" | "dpsr" | "plain" | "plainpatch" | "jpeg"
-      , "dataroot_H": "~/nas/dataset/Set5/GTmod12"  // path of H testing dataset
-      , "dataroot_L": "~/nas/dataset/Set5/LRbicx2"              // path of L testing dataset
+      , "dataroot_H": "~/workspace/data/Set5/GTmod12"  // path of H testing dataset
+      , "dataroot_L": "~/workspace/data/Set5/LRbicx2"              // path of L testing dataset
 
     }
   }
@@ -76,7 +76,7 @@
     , "G_param_strict": true
     , "E_param_strict": true
 
-    , "checkpoint_test": 5000           // for testing
+    , "checkpoint_test": 1000           // for testing 5000 original
     , "checkpoint_save": 5000           // for saving models
     , "checkpoint_print": 200           // for print
   }

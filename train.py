@@ -13,6 +13,7 @@ from utils import utils_logger
 from utils import util
 from utils import option
 from utils.dist import init_dist, get_dist_info
+from utils.util import rgb2ycbcr
 
 from data.select_dataset import define_Dataset
 from models.select_model import define_Model
@@ -223,6 +224,14 @@ def main(json_path='option.json'):
                     # -----------------------
                     # calculate PSNR
                     # -----------------------
+                    print(E_img.shape)
+                    print(H_img.shape)
+
+                    ########## Calculate PSNR using Y channel ##########
+                    E_img = rgb2ycbcr(E_img)
+                    H_img = rgb2ycbcr(H_img)
+                    ########## Calculate PSNR using Y channel ##########
+
                     current_psnr = util.calculate_psnr(E_img, H_img, border=border)
 
                     logger.info('{:->4d}--> {:>10s} | {:<4.2f}dB'.format(idx, image_name_ext, current_psnr))

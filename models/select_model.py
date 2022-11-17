@@ -1,5 +1,5 @@
 def define_Model(opt):
-    model = opt['model']      # one input: L
+    model = opt['model']  # one input: L
 
     if model == 'plain':
         from models.model_plain import ModelPlain as M

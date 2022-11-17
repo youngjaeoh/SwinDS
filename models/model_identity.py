@@ -1,25 +1,24 @@
 from collections import OrderedDict
-
 import torch
 import torch.nn as nn
-import wandb
-from torch.optim import Adam
 from torch.optim import lr_scheduler
+from torch.optim import Adam
+import wandb
 
-from models.model_base import ModelBase
 from models.select_network import define_G
+from models.model_base import ModelBase
+
 from utils.utils_model import test_mode
 
 
-class ModelPlain(ModelBase):
+class ModelIdentity(ModelBase):
     """Train with pixel loss"""
-
     def __init__(self, opt):
-        super(ModelPlain, self).__init__(opt)
+        super(ModelIdentity, self).__init__(opt)
         # ------------------------------------
         # define network
         # ------------------------------------
-        self.opt_train = self.opt['train']  # training option
+        self.opt_train = self.opt['train']    # training option
         self.netG = define_G(opt)
         self.netG = self.model_to_device(self.netG)
         if self.opt_train['E_decay'] > 0:
@@ -36,32 +35,19 @@ class ModelPlain(ModelBase):
     # initialize training
     # ----------------------------------------
     def init_train(self):
-        self.load()  # load models
-        self.netG.train()  # set training mode,for BN
-        self.define_loss()  # define loss
-        self.define_optimizer()  # define optimizer
-        self.load_optimizers()  # load optimizer
-        self.define_scheduler()  # define scheduler
-        self.log_dict = OrderedDict()  # log
+        self.load()                           # load models
+        self.netG.train()                     # set training mode,for BN
+        self.define_loss()                    # define loss
+        self.define_optimizer()               # define optimizer
+        self.load_optimizers()                # load optimizer
+        self.define_scheduler()               # define scheduler
+        self.log_dict = OrderedDict()         # log
 
     # ----------------------------------------
     # load pre-trained G models
     # ----------------------------------------
     def load(self):
         load_path_G = self.opt['path']['pretrained_netG']
-        # load_path_G = "superresolution/swinir_sr_classical_patch48_x2_identity/"
-        # print("####################################################")
-        # print("####################################################")
-        # print("####################################################")
-        # print("####################################################")
-        # print("####################################################")
-        # print(load_path_G)
-        # print("####################################################")
-        # print("####################################################")
-        # print("####################################################")
-        # print("####################################################")
-        # print("####################################################")
-
         if load_path_G is not None:
             print('Loading models for G [{:s}] ...'.format(load_path_G))
             self.load_network(load_path_G, self.netG, strict=self.opt_train['G_param_strict'], param_key='params')
@@ -69,8 +55,7 @@ class ModelPlain(ModelBase):
         if self.opt_train['E_decay'] > 0:
             if load_path_E is not None:
                 print('Loading models for E [{:s}] ...'.format(load_path_E))
-                self.load_network(load_path_E, self.netE, strict=self.opt_train['E_param_strict'],
-                                  param_key='params_ema')
+                self.load_network(load_path_E, self.netE, strict=self.opt_train['E_param_strict'], param_key='params_ema')
             else:
                 print('Copying models for E ...')
                 self.update_E(0)
@@ -138,11 +123,10 @@ class ModelPlain(ModelBase):
                                                             ))
         elif self.opt_train['G_scheduler_type'] == 'CosineAnnealingWarmRestarts':
             self.schedulers.append(lr_scheduler.CosineAnnealingWarmRestarts(self.G_optimizer,
-                                                                            self.opt_train['G_scheduler_periods'],
-                                                                            self.opt_train[
-                                                                                'G_scheduler_restart_weights'],
-                                                                            self.opt_train['G_scheduler_eta_min']
-                                                                            ))
+                                                            self.opt_train['G_scheduler_periods'],
+                                                            self.opt_train['G_scheduler_restart_weights'],
+                                                            self.opt_train['G_scheduler_eta_min']
+                                                            ))
         else:
             raise NotImplementedError
 
@@ -182,10 +166,10 @@ class ModelPlain(ModelBase):
         # `clip_grad_norm` helps prevent the exploding gradient problem.
         G_optimizer_clipgrad = self.opt_train['G_optimizer_clipgrad'] if self.opt_train['G_optimizer_clipgrad'] else 0
         if G_optimizer_clipgrad > 0:
-            torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=self.opt_train['G_optimizer_clipgrad'],
-                                           norm_type=2)
+            torch.nn.utils.clip_grad_norm_(self.parameters(), max_norm=self.opt_train['G_optimizer_clipgrad'], norm_type=2)
 
         self.G_optimizer.step()
+
 
         # self.log_dict['G_loss'] = G_loss.item()/self.E.size()[0]  # if `reduction='sum'`
         self.log_dict['G_loss'] = G_loss.item()
