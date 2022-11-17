@@ -26,6 +26,13 @@ class engine():
         if self.opt_train['E_decay'] > 0:
             self.netE = self.define_network(opt).to(self.device).eval()
 
+        self.n_parameters = self.count_parameters(self.netG)
+        print(f"Total Number of Parameters: {self.n_parameters}")
+        wandb.log({"# Parameters": self.n_parameters})
+
+    def count_parameters(self, model):
+        return sum(p.numel() for p in model.parameters() if p.requires_grad)
+
     def define_network(self, opt):
         opt_net = opt['netG']
         netG = net(upscale=opt_net['upscale'],

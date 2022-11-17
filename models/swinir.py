@@ -206,11 +206,11 @@ class SwinTransformerBlock(nn.Module):
         assert 0 <= self.shift_size < self.window_size, "shift_size must in 0-window_size"
 
         self.norm1 = norm_layer(dim)
-        # self.attn = WindowAttention(
-        #     dim, window_size=to_2tuple(self.window_size), num_heads=num_heads,
-        #     qkv_bias=qkv_bias, qk_scale=qk_scale, attn_drop=attn_drop, proj_drop=drop)
+        self.attn = WindowAttention(
+            dim, window_size=to_2tuple(self.window_size), num_heads=num_heads,
+            qkv_bias=qkv_bias, qk_scale=qk_scale, attn_drop=attn_drop, proj_drop=drop)
         # self.attn = nn.Identity()
-        self.attn = Pooling()
+        # self.attn = Pooling()
 
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
         self.norm2 = norm_layer(dim)
@@ -269,11 +269,11 @@ class SwinTransformerBlock(nn.Module):
         # W-MSA/SW-MSA (to be compatible for testing on images whose shapes are the multiple of window size
         ############### ideintity mapping!!!!!!! ################
         if self.input_resolution == x_size:
-            # attn_windows = self.attn(x_windows, mask=self.attn_mask)  # nW*B, window_size*window_size, C
-            attn_windows = self.attn(x_windows)
+            attn_windows = self.attn(x_windows, mask=self.attn_mask)  # nW*B, window_size*window_size, C
+            # attn_windows = self.attn(x_windows)
         else:
-            # attn_windows = self.attn(x_windows, mask=self.calculate_mask(x_size).to(x.device))
-            attn_windows = self.attn(x_windows)
+            attn_windows = self.attn(x_windows, mask=self.calculate_mask(x_size).to(x.device))
+            # attn_windows = self.attn(x_windows)
         ############### ideintity mapping!!!!!!! ################
 
         # merge windows
